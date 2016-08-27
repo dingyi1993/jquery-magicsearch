@@ -1,0 +1,60 @@
+$prefix-for-webkit: true !default;
+$prefix-for-mozilla: true !default;
+$prefix-for-microsoft: true !default;
+$prefix-for-opera: true !default;
+$prefix-for-spec: true !default;
+
+@mixin prefixer ($property, $value, $prefixes) {
+  @each $prefix in $prefixes {
+
+    @if $prefix == webkit and $prefix-for-webkit == true {
+      -webkit-#{$property}: $value;
+    }
+    @else if $prefix == moz and $prefix-for-mozilla == true {
+      -moz-#{$property}: $value;
+    }
+    @else if $prefix == ms and $prefix-for-microsoft == true {
+      -ms-#{$property}: $value;
+    }
+    @else if $prefix == o and $prefix-for-opera == true {
+      -o-#{$property}: $value;
+    }
+    @else if $prefix == spec and $prefix-for-spec == true {
+      #{$property}: $value;
+    }
+    @else {
+      @warn "Unrecognized prefix: #{$prefix}";
+    }
+  }
+}
+
+@mixin box-sizing($type:border-box) {
+  @include prefixer(box-sizing, $type, webkit moz ms o spec);
+}
+
+@mixin transform($property...) {
+  @include prefixer(transform, $property, webkit moz ms o spec);
+}
+
+@mixin keyframes($animationName) {
+  @-webkit-keyframes #{$animationName} {
+    $browser: '-webkit-' !global;
+    @content;
+  }
+  @-moz-keyframes #{$animationName} {
+    $browser: '-moz-' !global;
+    @content;
+  }
+  @-ms-keyframes #{$animationName} {
+    $browser: '-ms-' !global;
+    @content;
+  }
+  @-o-keyframes #{$animationName} {
+    $browser: '-o-' !global;
+    @content;
+  }
+  @keyframes #{$animationName} {
+    $browser: '' !global;
+    @content;
+  }
+} $browser: null;

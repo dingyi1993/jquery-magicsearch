@@ -1,3 +1,5 @@
 # jquery-magicsearch
+
 an input plugin based on jquery
-coming soon...
+
+docs coming soon...
