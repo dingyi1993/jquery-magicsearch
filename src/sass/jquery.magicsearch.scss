@@ -49,26 +49,6 @@
             display: block;
             height: 100%;
         }
-
-        &.current {
-            background-color: #e1eaf5;
-            color: #4078c0;
-            border-color: #4078c0;
-
-            .multi-item-close {
-                &:before,
-                &:after {
-                    background-color: #4078c0;
-                }
-
-                &:hover {
-                    &:before,
-                    &:after {
-                        background-color:#0f63ce;
-                    }
-                }
-            }
-        }
     }
     .multi-item-close {
         display: block;

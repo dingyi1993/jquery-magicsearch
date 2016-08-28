@@ -10,7 +10,7 @@ var uglify = require('gulp-uglify');
 gulp.task('css', function() {
     return gulp.src('src/sass/*.scss')
         .pipe(sass())
-        .pipe(autoprefixer({browsers: ['last 5 versions']}))
+        .pipe(autoprefixer({browsers: ['>1%', 'last 5 versions']}))
         .pipe(gulp.dest('dist'))
         .pipe(cssnano())
         .pipe(rename({suffix: '.min'}))
@@ -35,5 +35,5 @@ gulp.task('watch', function() {
     gulp.watch('src/js/*.js', ['js']);
 });
 
-gulp.task('all', ['clean', 'css', 'js']);
-gulp.task('default', ['all', 'watch']);
+gulp.task('all', ['css', 'js']);
+gulp.task('default', ['clean', 'all', 'watch']);

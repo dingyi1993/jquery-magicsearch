@@ -1,7 +1,7 @@
 /**
  * input plugin based on jquery
  * @author  dingyi1993
- * @since  2016-08-25
+ * @since  2016-08-28
  * @version  1.0.0
  */
 ;(function (factory) {
@@ -195,7 +195,7 @@ MagicSearch.prototype = {
         var styles = this.props.styles;
         var ids = $input.attr('data-id');
         if ($input.parent().attr('data-belong') !== 'magicsearch') {
-            var $wrapper = $('<div class="' + doms.wrapper + ' ' + this.options.skin + '" data-belong="magicsearch"></div>');
+            var $wrapper = $('<div class="' + doms.wrapper + (this.options.skin ? (' ' + this.options.skin) : '') + '" data-belong="magicsearch"></div>');
             $wrapper.css('width', styles.width);
             $input.wrap($wrapper);
         }
@@ -646,6 +646,13 @@ MagicSearch.prototype = {
             var inputVals = inputVal.split(' ').filter(function(item) {
                 return item !== '';
             });
+            var tempArr = [];
+            for (var i = 0; i < inputVals.length - 1; i++) {
+                for (var j = i + 1; j < inputVals.length; j++) {
+                    tempArr.push(inputVals[i] + ' ' + inputVals[j]);
+                }
+            }
+            inputVals = inputVals.concat(tempArr);
             //locate highlight chars
             var dataHighlight;
             if (! isAll) {
@@ -847,12 +854,6 @@ $.fn.magicsearch = function(options) {
         var selfOptions = magicSearch.options;
         var $magicsearch_wrapper = $this.parent(),
             $magicsearch_box = $magicsearch_wrapper.find('.' + doms.box);
-        var blurFunc = function() {
-            magicSearch.hideSearchBox();
-            if (selfOptions.multiple && selfOptions.showMultiSkin) {
-                $magicsearch_wrapper.find('.' + doms.item + '.current').removeClass('current');
-            }
-        };
         var dropdown = function() {
             if ($magicsearch_wrapper.hasClass('disabled')) {
                 return false;
@@ -932,8 +933,6 @@ $.fn.magicsearch = function(options) {
                     if (! selfOptions.multiple && $_this.attr('data-id') !== '') {
                         magicSearch.hideSearchBox();
                         return;
-                    } else if (selfOptions.multiple && selfOptions.showMultiSkin) {
-                        $magicsearch_wrapper.find('.' + doms.items + ' .' + doms.item + '.current').removeClass('current');
                     }
                     clearTimeout(searchTimeout);
                     searchTimeout = setTimeout(function() {
@@ -958,11 +957,7 @@ $.fn.magicsearch = function(options) {
                 if (selfOptions.multiple) {
                     var $last_multi_item = $magicsearch_wrapper.find('.' + doms.items + ' .' + doms.item + ':last');
                     if (selfOptions.showMultiSkin && $_this.val() === '') {
-                        if ($last_multi_item.hasClass('current')) {
-                            magicSearch.deleteData($last_multi_item.attr('data-id'));
-                        } else {
-                            $last_multi_item.addClass('current');
-                        }
+                        magicSearch.deleteData($last_multi_item.attr('data-id'));
                     }
                 } else {
                     if ($(this).attr('data-id') !== '') {
@@ -984,28 +979,29 @@ $.fn.magicsearch = function(options) {
             }
         })
         .on('focus', function() {
+            $magicsearch_wrapper.addClass('hover');
             if (! selfOptions.isClear && $this.val() !== '' && $this.attr('data-id') === '') {
                 magicSearch.searchData().showSearchBox();
             } else if (selfOptions.focusShow) {
                 dropdown();
             }
         })
-        .on('blur', blurFunc);
+        .on('blur', function() {
+            $magicsearch_wrapper.removeClass('hover');
+            magicSearch.hideSearchBox();
+        });
 
-        $magicsearch_box.off().on('mouseenter','ul', function() {
-            $this.unbind('blur');
+        $magicsearch_box.off().on('mousedown', 'ul', function() {
+            return false;
         })
-        .on('mouseleave','ul', function() {
-            $this.blur(blurFunc);
-        })
-        .on('mouseenter','li', function() {
+        .on('mouseenter', 'li', function() {
             $(this).parent().find('li.ishover').removeClass('ishover');
             $(this).addClass('ishover');
         })
-        .on('mouseleave','li', function() {
+        .on('mouseleave', 'li', function() {
             $(this).removeClass('ishover');
         })
-        .on('click','li', function() {
+        .on('click', 'li', function() {
             var $li = $(this);
             if ($li.hasClass('selected') && selfOptions.multiple) {
                 magicSearch.deleteData($li.attr('data-id')).hideSearchBox();
