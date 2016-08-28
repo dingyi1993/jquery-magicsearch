@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <title>Basic - MagicSearch</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link href="css/normalize.css" rel="stylesheet">
+        <link href="css/style.css" rel="stylesheet">
+        <link href="../dist/jquery.magicsearch.min.css" rel="stylesheet">
+    </head>
+    <body class="theme4">
+        <div id="container">
+            <h1>MagicSearch</h1>
+            <nav>
+                <a href="basic.html">Basic</a>
+                <a href="multiple.html">Multiple</a>
+                <a href="dropdownBtn.html">DropdownBtn</a>
+                <a class="active" href="focusShow.html">FocusShow</a>
+                <a href="http://www.choujindeputao.com/magicsearch/">More</a>
+            </nav>
+            <section>
+                <input class="magicsearch" id="basic" placeholder="search names...">
+            </section>
+        </div>
+    <script src="lib/jquery-2.2.3.min.js"></script>
+    <script src="../dist/jquery.magicsearch.min.js"></script>
+    <script>
+        $(function() {
+            var dataSource = [
+                {id: 1, firstName: 'Tim', lastName: 'cook'}
+            ];
+            $('#basic').magicsearch({
+                dataSource: dataSource,
+                fields: ['firstName', 'lastName'],
+                id: 'id',
+                format: '%firstName% · %lastName%',
+                focusShow: true
+            });
+        });
+    </script>
+    </body>
+</html>
