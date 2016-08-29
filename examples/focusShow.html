@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
     <head>
-        <title>Basic - MagicSearch</title>
+        <title>FocusShow - MagicSearch</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link href="css/normalize.css" rel="stylesheet">
         <link href="css/style.css" rel="stylesheet">
-        <link href="../dist/jquery.magicsearch.min.css" rel="stylesheet">
+        <link href="../dist/jquery.magicsearch.css" rel="stylesheet">
     </head>
     <body class="theme4">
         <div id="container">
@@ -27,7 +27,16 @@
     <script>
         $(function() {
             var dataSource = [
-                {id: 1, firstName: 'Tim', lastName: 'cook'}
+                {id: 1, firstName: 'Tim', lastName: 'Cook'},
+                {id: 2, firstName: 'Eric', lastName: 'Baker'},
+                {id: 3, firstName: 'Victor', lastName: 'Brown'},
+                {id: 4, firstName: 'Lisa', lastName: 'White'},
+                {id: 5, firstName: 'Oliver', lastName: 'Bull'},
+                {id: 6, firstName: 'Zade', lastName: 'Stock'},
+                {id: 7, firstName: 'David', lastName: 'Reed'},
+                {id: 8, firstName: 'George', lastName: 'Hand'},
+                {id: 9, firstName: 'Tony', lastName: 'Well'},
+                {id: 10, firstName: 'Bruce', lastName: 'Wayne'},
             ];
             $('#basic').magicsearch({
                 dataSource: dataSource,
