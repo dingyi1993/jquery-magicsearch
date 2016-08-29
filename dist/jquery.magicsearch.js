@@ -957,7 +957,7 @@ $.fn.magicsearch = function(options) {
                 if (selfOptions.multiple) {
                     var $last_multi_item = $magicsearch_wrapper.find('.' + doms.items + ' .' + doms.item + ':last');
                     if (selfOptions.showMultiSkin && $_this.val() === '') {
-                        magicSearch.deleteData($last_multi_item.attr('data-id'));
+                        magicSearch.deleteData($last_multi_item.attr('data-id')).hideSearchBox();
                     }
                 } else {
                     if ($(this).attr('data-id') !== '') {
