@@ -1,5 +1,5 @@
 {
-  "name": "jquery-magicsearch",
+  "name": "magicsearch",
   "version": "1.0.0",
   "description": "An input plugin based on jquery.",
   "main": "gulpfile.js",
@@ -12,7 +12,8 @@
   },
   "keywords": [
     "magicsearch",
-    "jquery"
+    "jquery",
+    "input"
   ],
   "author": "dingyi1993",
   "license": "MIT",
