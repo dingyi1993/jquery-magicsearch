@@ -2,4 +2,4 @@
 
 an input plugin based on jquery
 
-docs coming soon...
+view on my home page,[click here](http://www.choujindeputao.com/magicsearch/)
