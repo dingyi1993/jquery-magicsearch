@@ -1,8 +1,10 @@
 /**
  * input plugin based on jquery
  * @author  dingyi1993
- * @since  2016-08-28
+ * @since  2016-08-29
  * @version  1.0.0
+ * project link: https://github.com/dingyi1993/jquery-magicsearch
+ * home page link: http://www.choujindeputao.com/magicsearch/
  */
 ;(function (factory) {
     'use strict';
