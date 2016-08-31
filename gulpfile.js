@@ -6,6 +6,7 @@ var autoprefixer = require('gulp-autoprefixer');
 var rename = require('gulp-rename');
 var clean = require('gulp-clean');
 var uglify = require('gulp-uglify');
+var sequence = require('gulp-sequence');
 
 gulp.task('css', function() {
     return gulp.src('src/sass/*.scss')
@@ -35,5 +36,5 @@ gulp.task('watch', function() {
     gulp.watch('src/js/*.js', ['js']);
 });
 
-gulp.task('all', ['css', 'js']);
-gulp.task('default', ['clean', 'all', 'watch']);
+gulp.task('build', sequence('clean', ['css', 'js']));
+gulp.task('default', sequence('build', 'watch'));

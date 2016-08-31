@@ -4,11 +4,13 @@
   "description": "An input plugin based on jquery.",
   "main": "gulpfile.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "gulp build",
+    "start": "gulp",
+    "build": "gulp build"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/dingyi1993/jquery-magicsearch.git"
+    "url": "https://github.com/dingyi1993/jquery-magicsearch.git"
   },
   "keywords": [
     "magicsearch",
@@ -20,7 +22,7 @@
   "bugs": {
     "url": "https://github.com/dingyi1993/jquery-magicsearch/issues"
   },
-  "homepage": "https://github.com/dingyi1993/jquery-magicsearch#readme",
+  "homepage": "http://www.choujindeputao.com/magicsearch/",
   "devDependencies": {
     "gulp": "^3.9.1",
     "gulp-autoprefixer": "^3.1.1",
@@ -29,6 +31,7 @@
     "gulp-if": "^2.0.1",
     "gulp-rename": "^1.2.2",
     "gulp-sass": "^2.3.2",
+    "gulp-sequence": "^0.4.6",
     "gulp-uglify": "^2.0.0"
   }
 }
