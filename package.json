@@ -1,6 +1,6 @@
 {
   "name": "magicsearch",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "An input plugin based on jquery.",
   "main": "gulpfile.js",
   "scripts": {

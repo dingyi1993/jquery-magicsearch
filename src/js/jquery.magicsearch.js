@@ -981,7 +981,7 @@ $.fn.magicsearch = function(options) {
             }
         })
         .on('focus', function() {
-            $magicsearch_wrapper.addClass('hover');
+            $magicsearch_wrapper.addClass('focus');
             if (! selfOptions.isClear && $this.val() !== '' && $this.attr('data-id') === '') {
                 magicSearch.searchData().showSearchBox();
             } else if (selfOptions.focusShow) {
@@ -989,7 +989,7 @@ $.fn.magicsearch = function(options) {
             }
         })
         .on('blur', function() {
-            $magicsearch_wrapper.removeClass('hover');
+            $magicsearch_wrapper.removeClass('focus');
             magicSearch.hideSearchBox();
         });
 
