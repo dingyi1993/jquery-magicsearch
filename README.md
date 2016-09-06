@@ -7,3 +7,9 @@ an input plugin based on jquery
 [![Downloads](https://img.shields.io/npm/dt/magicsearch.svg)](https://www.npmjs.com/package/magicsearch)
 
 view on my home page,[click here](http://www.choujindeputao.com/magicsearch/)
+
+## Changes Log
+
+### v1.0.1 2016-09-06
+
+1. fix class name 'hover' to 'focus'
