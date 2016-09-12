@@ -13,3 +13,9 @@ view on my home page,[click here](http://www.choujindeputao.com/magicsearch/)
 ### v1.0.1 2016-09-06
 
 1. fix class name 'hover' to 'focus'
+
+### v1.0.2 2016-09-12
+
+1. change src to es6
+2. hide search box when click close btn
+3. update examples

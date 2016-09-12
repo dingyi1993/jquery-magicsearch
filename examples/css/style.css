@@ -7,6 +7,7 @@ html {
 }
 html {
     font-size: 62.5%;
+    height: 100%;
 }
 body {
     font: 1.4rem/1.5 Consolas, Helvetica, Arial, sans-serif;
@@ -57,6 +58,9 @@ section {
 .magicsearch:focus {
     background-color: #fff;
 }
+.adjust {
+    height: 1px;
+}
 
 /*theme*/
 body.theme1 {
@@ -104,7 +108,7 @@ body.theme2 .magicsearch-wrapper .multi-item {
 body.theme2 .magicsearch-wrapper .multi-item span {
     font-size: 1.6rem;
 }
-body.theme2 .magicsearch-wrapper.hover .multi-item {
+body.theme2 .magicsearch-wrapper.focus .multi-item {
     background-color: #fff;
     color: #415c71;
     border-color: #415c71;
@@ -134,7 +138,7 @@ body.theme3 .magicsearch-wrapper .magicsearch-box li.ishover {
 body.theme3 .magicsearch-wrapper .magicsearch-arrow i:before {
     border-top-color: #fff;
 }
-body.theme3 .magicsearch-wrapper.hover .magicsearch-arrow i:before {
+body.theme3 .magicsearch-wrapper.focus .magicsearch-arrow i:before {
     border-top-color: #00b6ad;
 }
 body.theme3::-moz-placeholder {

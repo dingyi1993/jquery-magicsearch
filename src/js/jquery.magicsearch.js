@@ -1,12 +1,21 @@
-/**
- * input plugin based on jquery
- * @author  dingyi1993
- * @since  2016-08-29
- * @version  1.0.0
- * project link: https://github.com/dingyi1993/jquery-magicsearch
- * home page link: http://www.choujindeputao.com/magicsearch/
+/*!
+ * MagicSearch - An input plugin based on jquery
+ * 
+ * Copyright (c) 2016 dingyi1993
+ * 
+ * Version: 1.0.2
+ * 
+ * Licensed under the MIT license:
+ *   http://www.opensource.org/licenses/MIT
+ * 
+ * project link:
+ *   https://github.com/dingyi1993/jquery-magicsearch
+ * 
+ * home page link:
+ *   http://www.choujindeputao.com/magicsearch/
  */
-;(function (factory) {
+
+;(function(factory) {
     'use strict';
     if (typeof define === 'function' && define.amd) {
         // using AMD; register as anon module
@@ -20,7 +29,7 @@
 (function($) {
 'use strict';
 
-var
+const
 //separator of format
 SEPARATOR = '%',
 
@@ -67,30 +76,29 @@ doms = {
     close: 'multi-item-close',
 },
 
-isString = function(value) {
-    return $.type(value) === 'string';
-},
+isString = value => $.type(value) === 'string',
+
 //transform string which like this : %username%
-formatParse = function(format, data) {
-    var fields = format.match(new RegExp('\\' + SEPARATOR + '[^\\' + SEPARATOR + ']+\\' + SEPARATOR, 'g'));
+formatParse = (format, data) => {
+    let fields = format.match(new RegExp(`\\${SEPARATOR}[^\\${SEPARATOR}]+\\${SEPARATOR}`, 'g'));
     if (! fields) {
         return format;
     }
-    for (var i = 0; i < fields.length; i++) {
+    for (let i = 0; i < fields.length; i++) {
         fields[i] = fields[i].replace(new RegExp('\\' + SEPARATOR, 'g'), '');
     }
-    for (i = 0; i < fields.length; i++) {
+    for (let i = 0; i < fields.length; i++) {
         format = format.replace(SEPARATOR + fields[i] + SEPARATOR, data[fields[i]] ? data[fields[i]] : 'error');
     }
     return format;
 },
 //delete px at ending
-deletePx = function(value) {
-    var index = value.lastIndexOf('px');
+deletePx = value => {
+    let index = value.lastIndexOf('px');
     return index < 0 ? Number(value) : Number(value.substring(0, index));
 },
 //transform to positive num
-transform2PositiveNum = function(value, key) {
+transform2PositiveNum = (value, key) => {
     if (! $.isNumeric(value)) {
         value = MagicSearch.defaults[key];
     } else {
@@ -131,15 +139,9 @@ MagicSearch.defaults = {
     focusShow: false,       //boolean
     noResult: '',           //string
     skin: '',               //string
-    disableRule: function(data) {
-        return false;
-    },
-    success: function($input, data) {
-        return true;
-    },
-    afterDelete: function($input, data) {
-        return true;
-    }
+    disableRule: data => false,
+    success: ($input, data) => true,
+    afterDelete: ($input, data) => true
 };
 
 MagicSearch.prototype = {
@@ -148,8 +150,7 @@ MagicSearch.prototype = {
         window.MagicSearch.index += 1;
 
         //you must do those things before ajax
-        var _this = this;
-        var $input = this.$element;
+        let $input = this.$element;
         this.options = $.extend({}, MagicSearch.defaults, this.options);
 
         this.props = {
@@ -194,14 +195,14 @@ MagicSearch.prototype = {
         this.props.styles.sightHeight = this.props.styles.height - this.props.styles.borderTopWidth - this.props.styles.borderBottomWidth;
         this.props.styles.width = $input.width() + this.props.styles.borderLeftWidth + this.props.styles.borderRightWidth + this.props.styles.paddingLeft + this.props.styles.paddingRight;
 
-        var styles = this.props.styles;
-        var ids = $input.attr('data-id');
+        let styles = this.props.styles;
+        let ids = $input.attr('data-id');
         if ($input.parent().attr('data-belong') !== 'magicsearch') {
-            var $wrapper = $('<div class="' + doms.wrapper + (this.options.skin ? (' ' + this.options.skin) : '') + '" data-belong="magicsearch"></div>');
+            let $wrapper = $(`<div class="${doms.wrapper + (this.options.skin ? (' ' + this.options.skin) : '')}" data-belong="magicsearch"></div>`);
             $wrapper.css('width', styles.width);
             $input.wrap($wrapper);
         }
-        var $magicsearch_wrapper = $input.parent();
+        let $magicsearch_wrapper = $input.parent();
         //init magicsearch wrapper
         $magicsearch_wrapper.css({
             'display': $input.css('display'),
@@ -221,7 +222,9 @@ MagicSearch.prototype = {
             $input.attr('data-placeholder', $input.attr('placeholder'));
         }
         $input.removeAttr('disabled');
-        $input.val('');
+        if (this.options.isClear) {
+            $input.val('');
+        }
         if (ids === undefined) {
             $input.attr('data-id', '');
             ids = '';
@@ -229,7 +232,7 @@ MagicSearch.prototype = {
 
         //init magicsearch box
         if ($magicsearch_wrapper.find('.' + doms.box).length === 0) {
-            $magicsearch_wrapper.append('<div class="' + doms.box + '"></div>');
+            $magicsearch_wrapper.append(`<div class="${doms.box}"></div>`);
         }
         $magicsearch_wrapper.find('.' + doms.box).css({
             'top': styles.height
@@ -237,8 +240,8 @@ MagicSearch.prototype = {
 
         //init hidden
         if (this.options.hidden) {
-            var name = $input.attr('name');
-            var $hidden = $('<input class="' + doms.hidden + '" type="hidden" value="' + ids + '">');
+            let name = $input.attr('name');
+            let $hidden = $(`<input class="${doms.hidden}" type="hidden" value="${ids}">`);
             if (name) {
                 $hidden.attr('name', name);
                 $input.removeAttr('name');
@@ -248,7 +251,7 @@ MagicSearch.prototype = {
 
         //init magicsearch arrow
         if (this.options.dropdownBtn) {
-            var $arrow = $('<div class="' + doms.arrow + '"><i></i></div>');
+            let $arrow = $(`<div class="${doms.arrow}"><i></i></div>`);
             $input.addClass('dropdown');
             $input.css('padding-right', styles.paddingRight + DROPDOWN_WIDTH);
             $arrow.css({
@@ -260,29 +263,29 @@ MagicSearch.prototype = {
         }
 
         if (this.options.type == 'ajax') {
-            var $loading = $('<div class="' + doms.loading + '"><div></div></div>');
+            let $loading = $(`<div class="${doms.loading}"><div></div></div>`);
             $magicsearch_wrapper.append($loading);
 
-            var loadingTimeout = setTimeout(function() {
+            let loadingTimeout = setTimeout(() => {
                 $magicsearch_wrapper.find('.' + doms.loading).find('div').show();
             }, 500);
 
-            var ajaxOptions = {
+            let ajaxOptions = {
                 type: 'GET',
                 url: this.options.dataSource,
                 dataType: 'json',
-                error: function() {
+                error: () => {
                     console.error('magicsearch: Error with xhr.Index: ' + window.MagicSearch.index);
                 },
-                success: function(data) { },
+                success: data => { },
             };
             ajaxOptions = $.extend({}, ajaxOptions, this.options.ajaxOptions);
-            var success = ajaxOptions.success;
-            ajaxOptions.success = function(data) {
+            let success = ajaxOptions.success;
+            ajaxOptions.success = data => {
                 clearTimeout(loadingTimeout);
-                _this.options.dataSource = data;
+                this.options.dataSource = data;
                 $magicsearch_wrapper.find('.' + doms.loading).remove();
-                _this.initAfterAjax();
+                this.initAfterAjax();
                 success(data);
             };
 
@@ -293,10 +296,10 @@ MagicSearch.prototype = {
         return this;
     },
     initAfterAjax: function() {
-        var $input = this.$element;
-        var $magicsearch_wrapper = $input.parent();
-        var styles = this.props.styles;
-        var ids = $input.attr('data-id');
+        let $input = this.$element;
+        let $magicsearch_wrapper = $input.parent();
+        let styles = this.props.styles;
+        let ids = $input.attr('data-id');
         if ($.isFunction(this.options.dataSource)) {
             this.options.dataSource = this.options.dataSource(this.$element);
         }
@@ -309,8 +312,8 @@ MagicSearch.prototype = {
                 try {
                     this.options.dataSource = $.parseJSON(this.options.dataSource);
                     if (! $.isArray(this.options.dataSource)) {
-                        var dataSource = [];
-                        for (var id in this.options.dataSource) {
+                        let dataSource = [];
+                        for (let id in this.options.dataSource) {
                             dataSource.push(this.options.dataSource[id]);
                         }
                         this.options.dataSource = dataSource;
@@ -322,8 +325,8 @@ MagicSearch.prototype = {
                 }
             }
         } else if (! $.isArray(this.options.dataSource)) {
-            var dataSource = [];
-            for (var id in this.options.dataSource) {
+            let dataSource = [];
+            for (let id in this.options.dataSource) {
                 dataSource.push(this.options.dataSource[id]);
             }
             this.options.dataSource = dataSource;
@@ -355,21 +358,19 @@ MagicSearch.prototype = {
             }
         }
         if (! $.isFunction(this.options.success)) {
-            this.options.success = function($input, data) {
-                return true;
-            };
+            this.options.success = ($input, data) => true;
         }
         if (! $.isFunction(this.options.disableRule)) {
-            this.options.disableRule = function(data) {
-                return false;
-            };
+            this.options.disableRule = data => false;
         }
-        ids !== '' && this.getDataSource();
+        if (ids !== '') {
+            this.getDataSource();
+        }
         //init multi items
         if (this.options.multiple) {
             $input.addClass('multi');
-            if (this.options.showMultiSkin && $magicsearch_wrapper.find('.' + doms.items).length == 0) {
-                var $items = $('<div class="' + doms.items + '"></div>');
+            if (this.options.showMultiSkin && $magicsearch_wrapper.find('.' + doms.items).length === 0) {
+                let $items = $(`<div class="${doms.items}"></div>`);
                 $items.css({
                     'top': this.props.multiStyle.space + styles.borderTopWidth,
                     'left': this.props.multiStyle.space + styles.borderLeftWidth,
@@ -381,7 +382,7 @@ MagicSearch.prototype = {
         }
 
         if (this.options.multiple) {
-            var idArr = ids ? ids.split(',') : [];
+            let idArr = ids ? ids.split(',') : [];
 
             if (this.options.maxItem !== true && idArr.length >= this.options.maxItem) {
                 $input.attr('disabled', 'disabled');
@@ -390,8 +391,8 @@ MagicSearch.prototype = {
 
             //init default style
             if (this.options.showMultiSkin) {
-                var hasSetId = [];
-                for (var i = 0; i < idArr.length; i++) {
+                let hasSetId = [];
+                for (let i = 0; i < idArr.length; i++) {
                     hasSetId.push(idArr[i]);
                     $input.attr('data-id',hasSetId.join(','));
                     if (this.options.hidden) {
@@ -402,14 +403,14 @@ MagicSearch.prototype = {
             }
         } else {
             if (ids !== '') {
-                var data = this.props.objDataSource[ids];
-                var format = this.options.inputFormat ? this.options.inputFormat : this.options.format;
+                let data = this.props.objDataSource[ids];
+                let format = this.options.inputFormat ? this.options.inputFormat : this.options.format;
                 $input.val(formatParse(format, data));
             }
         }
     },
     destroy: function() {
-        var $input = this.$element,
+        let $input = this.$element,
             $magicsearch_wrapper = $input.parent();
         if ($magicsearch_wrapper.attr('data-belong') === 'magicsearch') {
             this.element.style = this.props.style;
@@ -422,7 +423,7 @@ MagicSearch.prototype = {
                 'height': this.props.styles.height,
                 'width': this.props.styles.width,
             });
-            var placeholder = $input.attr('data-placeholder');
+            let placeholder = $input.attr('data-placeholder');
             if (placeholder !== undefined) {
                 $input.attr('placeholder', placeholder);
                 $input.removeAttr('data-placeholder');
@@ -435,16 +436,16 @@ MagicSearch.prototype = {
         }
     },
     getDataSource: function() {
-        var dataSource = this.options.dataSource;
+        let dataSource = this.options.dataSource;
         if (this.props.isFirstGetDataSource) {
-            var objDataSource = {};
-            for (var i = 0; i < dataSource.length; i++) {
-                for (var key in dataSource[i]) {
+            let objDataSource = {};
+            for (let i = 0; i < dataSource.length; i++) {
+                for (let key in dataSource[i]) {
                     this.options.dataSource[i][key] = String(dataSource[i][key]);
                 }
             }
             this.props.isFirstGetDataSource = false;
-            for (i = 0; i < dataSource.length; i++) {
+            for (let i = 0; i < dataSource.length; i++) {
                 objDataSource[dataSource[i][this.options.id]] = dataSource[i];
             }
             this.props.objDataSource = objDataSource;
@@ -452,12 +453,12 @@ MagicSearch.prototype = {
         return this.options.dataSource;
     },
     setData: function() {
-        var $input = this.$element,
+        let $input = this.$element,
             $magicsearch_wrapper = $input.parent(),
             $magicsearch_box = $magicsearch_wrapper.find('.' + doms.box),
             $magicsearch_arrow = $magicsearch_wrapper.find('.' + doms.arrow),
             $ishover = $magicsearch_box.find('li.ishover');
-        var options = this.options,
+        let options = this.options,
             ids = $input.attr('data-id'),
             data = this.props.objDataSource[$ishover.attr('data-id')];
         if (options.multiple) {
@@ -466,7 +467,7 @@ MagicSearch.prototype = {
             }
             $input.val('');
 
-            var idArr = ids ? ids.split(',') : [];
+            let idArr = ids ? ids.split(',') : [];
             if (options.maxItem !== true && idArr.length >= options.maxItem) {
                 return this;
             }
@@ -493,11 +494,11 @@ MagicSearch.prototype = {
         return this;
     },
     deleteData: function(id) {
-        var $input = this.$element,
+        let $input = this.$element,
             $magicsearch_wrapper = $input.parent(),
             $magicsearch_box = $magicsearch_wrapper.find('.' + doms.box),
             $magicsearch_arrow = $magicsearch_wrapper.find('.' + doms.arrow);
-        var that = this,
+        let that = this,
             delIdArr = id ? id.split(',') : [],
             ids = $input.attr('data-id'),
             idArr = ids ? ids.split(',') : [],
@@ -514,17 +515,17 @@ MagicSearch.prototype = {
             return this;
         }
 
-        var delCallBack = function() {
+        let delCallBack = function() {
             $(this).remove();
         };
 
-        for (var i = 0; i < delIdArr.length; i++) {
-            $magicsearch_wrapper.find('.' + doms.item + '[data-id="' + delIdArr[i] + '"]').fadeOut(400, delCallBack);
+        for (let i = 0; i < delIdArr.length; i++) {
+            $magicsearch_wrapper.find(`.${doms.item}[data-id="${delIdArr[i]}"]`).fadeOut(400, delCallBack);
             idArr.splice(idArr.indexOf(delIdArr[i]), 1);
         }
-        setTimeout(function() {
-            var maxLineItem = parseInt((styles.maxWidth - (options.dropdownBtn ? DROPDOWN_WIDTH : 0) - styles.borderLeftWidth - styles.borderRightWidth - that.props.multiStyle.space) / (that.props.multiStyle.width + that.props.multiStyle.space));
-            var lineNum = parseInt(idArr.length / maxLineItem);
+        setTimeout(() => {
+            let maxLineItem = parseInt((styles.maxWidth - (options.dropdownBtn ? DROPDOWN_WIDTH : 0) - styles.borderLeftWidth - styles.borderRightWidth - that.props.multiStyle.space) / (that.props.multiStyle.width + that.props.multiStyle.space));
+            let lineNum = parseInt(idArr.length / maxLineItem);
             $input.attr('data-id', idArr.join(','));
             if (options.hidden) {
                 $magicsearch_wrapper.find('.' + doms.hidden).val(idArr.join(','));
@@ -540,7 +541,7 @@ MagicSearch.prototype = {
                 $input.css('padding-top', lineNum * styles.sightHeight + styles.paddingTop);
                 $magicsearch_box.css('top', styles.height + lineNum * styles.sightHeight);
                 if (lineNum === 0) {
-                    var minWidth = (idArr.length % maxLineItem + 1) * (that.props.multiStyle.width + that.props.multiStyle.space) + that.props.multiStyle.space * 2 + styles.borderLeftWidth + styles.borderRightWidth + (options.dropdownBtn ? DROPDOWN_WIDTH : 0);
+                    let minWidth = (idArr.length % maxLineItem + 1) * (that.props.multiStyle.width + that.props.multiStyle.space) + that.props.multiStyle.space * 2 + styles.borderLeftWidth + styles.borderRightWidth + (options.dropdownBtn ? DROPDOWN_WIDTH : 0);
                     $input.css('min-width', minWidth);
                     $magicsearch_wrapper.css('min-width', minWidth);
                 }
@@ -552,10 +553,10 @@ MagicSearch.prototype = {
         return this;
     },
     searchData: function(isAll, isScroll) {
-        var $input = this.$element,
+        let $input = this.$element,
             $magicsearch_box = $input.parent().find('.' + doms.box);
 
-        var options = this.options,
+        let options = this.options,
             dataJson = this.getDataSource(),
             ids = $input.attr('data-id'),
             idArr = ids ? ids.split(',') : [],
@@ -573,12 +574,12 @@ MagicSearch.prototype = {
         }
         //get the match data
         if (isAll) {
-            var page = $input.data('page') || 1;
+            let page = $input.data('page') || 1;
             data = dataJson.slice(0);
             //skip selected data
             if (! options.showSelected) {
-                for (var i = 0, num = 0; i < data.length; i++) {
-                    var index = idArr.indexOf(data[i][options.id]);
+                for (let i = 0, num = 0; i < data.length; i++) {
+                    let index = idArr.indexOf(data[i][options.id]);
                     if (index > -1) {
                         data.splice(i, 1);
                         num++;
@@ -599,35 +600,33 @@ MagicSearch.prototype = {
                 isAppendHtml = false;
             }
         } else {
-            var inputVals = inputVal.toLowerCase().split(' ');
-            var inputData = [];
-            for (var i = 0; i < inputVals.length; i++) {
+            let inputVals = [...new Set(inputVal.toLowerCase().split(' '))];
+            let inputData = [];
+            for (let i = 0; i < inputVals.length; i++) {
                 if (inputVals[i] === '') {
                     continue;
                 }
                 inputData.push({value: inputVals[i], flag: false});
             }
             //search match data
-            for (i = 0; i < dataJson.length; i++) {
+            for (let i = 0; i < dataJson.length; i++) {
                 //skip selected
                 if (! options.showSelected) {
-                    if (idArr.indexOf(dataJson[i][options.id]) > -1) {
+                    if (idArr.includes(dataJson[i][options.id])) {
                         continue;
                     }
                 }
-                inputData = inputData.map(function(item) {
+                inputData = inputData.map(item => {
                     item.flag = false;
                     return item;
                 });
-                for (var j = 0; j < options.fields.length; j++) {
-                    for (var k = 0; k < inputData.length; k++) {
-                        if (dataJson[i][options.fields[j]] !== null && dataJson[i][options.fields[j]].toLowerCase().indexOf(inputData[k].value) > -1) {
+                for (let j = 0; j < options.fields.length; j++) {
+                    for (let k = 0; k < inputData.length; k++) {
+                        if (dataJson[i][options.fields[j]] !== null && dataJson[i][options.fields[j]].toLowerCase().includes(inputData[k].value)) {
                             inputData[k].flag = true;
                         }
                     }
-                    var isMatch = inputData.every(function(item) {
-                        return item.flag;
-                    });
+                    let isMatch = inputData.every(item => item.flag);
                     if (isMatch) {
                         data.push(dataJson[i]);
                         break;
@@ -641,43 +640,41 @@ MagicSearch.prototype = {
 
         //generate html string
         if (data.length === 0) {
-            var noResult = options.noResult ? options.noResult : '&#x672a;&#x641c;&#x7d22;&#x5230;&#x7ed3;&#x679c;';
-            htmlStr = '<span class="no-result">' + noResult + '</span>';
+            let noResult = options.noResult ? options.noResult : '&#x672a;&#x641c;&#x7d22;&#x5230;&#x7ed3;&#x679c;';
+            htmlStr = `<span class="no-result">${noResult}</span>`;
         } else {
             //delete empty input
-            var inputVals = inputVal.split(' ').filter(function(item) {
-                return item !== '';
-            });
-            var tempArr = [];
-            for (var i = 0; i < inputVals.length - 1; i++) {
-                for (var j = i + 1; j < inputVals.length; j++) {
+            let inputVals = [...new Set(inputVal.split(' '))].filter(item => item !== '');
+            let tempArr = [];
+            for (let i = 0; i < inputVals.length - 1; i++) {
+                for (let j = i + 1; j < inputVals.length; j++) {
                     tempArr.push(inputVals[i] + ' ' + inputVals[j]);
                 }
             }
             inputVals = inputVals.concat(tempArr);
             //locate highlight chars
-            var dataHighlight;
+            let dataHighlight;
             if (! isAll) {
                 dataHighlight = $.extend(true, [], data);
-                data.forEach(function(item, index) {
-                    options.fields.forEach(function(field) {
-                        var posArr = [];
-                        if (item[field] != null) {
-                            for (var i = 0; i < item[field].length; i++) {
+                data.forEach((item, index) => {
+                    options.fields.forEach(field => {
+                        let posArr = [];
+                        if (item[field] !== null) {
+                            for (let i = 0; i < item[field].length; i++) {
                                 posArr[i] = 0;
                             }
-                            inputVals.forEach(function(value) {
-                                var position = item[field].toLowerCase().indexOf(value.toLowerCase());
+                            inputVals.forEach(value => {
+                                let position = item[field].toLowerCase().indexOf(value.toLowerCase());
                                 if (position > -1) {
-                                    for (var i = position; i < value.length + position; i++) {
+                                    for (let i = position; i < value.length + position; i++) {
                                         posArr[i] = 1;
                                     }
                                 }
                             });
                         }
-                        var tmpPosArr = [];
-                        var hasStarted = false, start = -1, length = 0;
-                        for (var i = posArr.length - 1; i >= 0; i--) {
+                        let tmpPosArr = [];
+                        let hasStarted = false, start = -1, length = 0;
+                        for (let i = posArr.length - 1; i >= 0; i--) {
                             if (posArr[i] == 1) {
                                 if (! hasStarted) {
                                     hasStarted = true;
@@ -705,25 +702,25 @@ MagicSearch.prototype = {
             }
 
             htmlStr += '<ul>';
-            data.forEach(function(item, index) {
-                var tmpItem = $.extend({}, item);
+            data.forEach((item, index) => {
+                let tmpItem = $.extend({}, item);
                 htmlStr += '<li class="';
                 htmlStr += options.disableRule(item) ? 'disabled' : 'enabled';
                 if (options.showSelected) {
-                    htmlStr += idArr.indexOf(item[options.id]) > -1 ? ' selected' : '';
+                    htmlStr += idArr.includes(item[options.id]) ? ' selected' : '';
                 }
-                htmlStr += '" data-id="' + (item[options.id] === undefined ? '' : item[options.id]) + '"';
+                htmlStr += `" data-id="${item[options.id] === undefined ? '' : item[options.id]}"`;
                 if (! isAll) {
-                    options.fields.forEach(function(field) {
+                    options.fields.forEach(field => {
                         if (item[field] !== null) {
-                            dataHighlight[index][field].forEach(function(value) {
-                                var matchStr = tmpItem[field].substr(value.start, value.length);
-                                tmpItem[field] = tmpItem[field].replace(new RegExp(matchStr, 'i'), '<span class="keyword">' + matchStr + '</span>');
+                            dataHighlight[index][field].forEach(value => {
+                                let matchStr = tmpItem[field].substr(value.start, value.length);
+                                tmpItem[field] = tmpItem[field].replace(new RegExp(matchStr, 'i'), `<span class="keyword">${matchStr}</span>`);
                             });
                         }
                     });
                 }
-                htmlStr += ' title="' + formatParse(options.format, item) + '">' + formatParse(options.format, tmpItem) + '</li>';
+                htmlStr += ` title="${formatParse(options.format, item)}">${formatParse(options.format, tmpItem)}</li>`;
             });
             htmlStr += '</ul>';
         }
@@ -741,7 +738,7 @@ MagicSearch.prototype = {
         return this;
     },
     showSearchBox: function(callback) {
-        var $input = this.$element,
+        let $input = this.$element,
             $magicsearch_wrapper = $input.parent(),
             $magicsearch_box = $magicsearch_wrapper.find('.' + doms.box);
         if ($magicsearch_box.is(':visible')) {
@@ -749,7 +746,7 @@ MagicSearch.prototype = {
         }
         //rotate the dropdown button 180deg
         if (this.options.dropdownBtn) {
-            var $magicsearch_arrow = $magicsearch_wrapper.find('.' + doms.arrow);
+            let $magicsearch_arrow = $magicsearch_wrapper.find('.' + doms.arrow);
             $magicsearch_arrow.removeClass('arrow-rotate-360');
             $magicsearch_arrow.addClass('arrow-rotate-180');
         }
@@ -757,7 +754,7 @@ MagicSearch.prototype = {
         return this;
     },
     hideSearchBox: function(isClear) {
-        var $input = this.$element,
+        let $input = this.$element,
             $magicsearch_wrapper = $input.parent(),
             $magicsearch_box = $magicsearch_wrapper.find('.' + doms.box);
         if (! $magicsearch_box.is(':visible')) {
@@ -774,36 +771,36 @@ MagicSearch.prototype = {
         }
         //rotate the dropdown button 360deg
         if (this.options.dropdownBtn) {
-            var $magicsearch_arrow = $magicsearch_wrapper.find('.' + doms.arrow);
+            let $magicsearch_arrow = $magicsearch_wrapper.find('.' + doms.arrow);
             $magicsearch_arrow.removeClass('arrow-rotate-180');
             $magicsearch_arrow.addClass('arrow-rotate-360');
         }
-        setTimeout(function() {
+        setTimeout(() => {
             $magicsearch_box.scrollTop(0);
         }, BOX_ANIMATE_TIME - 1);
-        $magicsearch_box.slideUp(BOX_ANIMATE_TIME, function() {
+        $magicsearch_box.slideUp(BOX_ANIMATE_TIME, () => {
             $magicsearch_box.html('');
         });
         return this;
     },
     appendHtml: function(data) {
-        var $input = this.$element,
+        let $input = this.$element,
             $magicsearch_wrapper = $input.parent(),
             $magicsearch_box = $magicsearch_wrapper.find('.' + doms.box),
             $magicsearch_arrow = $magicsearch_wrapper.find('.' + doms.arrow),
             $ishover = $magicsearch_box.find('li.ishover');
-        var options = this.options,
+        let options = this.options,
             styles = this.props.styles,
             that = this;
 
-        var idArr = $input.attr('data-id').split(',');
+        let idArr = $input.attr('data-id').split(',');
         if ($input.attr('placeholder')) {
             $input.removeAttr('placeholder');
         }
-        var maxLineItem = parseInt((styles.maxWidth - (options.dropdownBtn ? DROPDOWN_WIDTH : 0) - styles.borderLeftWidth - styles.borderRightWidth - that.props.multiStyle.space) / (that.props.multiStyle.width + that.props.multiStyle.space));
+        let maxLineItem = parseInt((styles.maxWidth - (options.dropdownBtn ? DROPDOWN_WIDTH : 0) - styles.borderLeftWidth - styles.borderRightWidth - that.props.multiStyle.space) / (that.props.multiStyle.width + that.props.multiStyle.space));
 
         //create item and insert into items
-        var $item = $('<div class="' + doms.item + '" data-id="' + data[options.id] + '" title="' + formatParse(options.format, data) + '"><span>' + formatParse(SEPARATOR + options.multiField + SEPARATOR, data) + '</span><a class="' + doms.close + '" data-id="' + data[options.id] + '" href="javascript:void(0);"></a></div>');
+        let $item = $(`<div class="${doms.item}" data-id="${data[options.id]}" title="${formatParse(options.format, data)}"><span>${formatParse(SEPARATOR + options.multiField + SEPARATOR, data)}</span><a class="${doms.close}" data-id="${data[options.id]}" href="javascript:;"></a></div>`);
         $item.css({
             'height': styles.sightHeight - that.props.multiStyle.space * 2,
             'width': that.props.multiStyle.width,
@@ -815,7 +812,7 @@ MagicSearch.prototype = {
             'top': parseInt((styles.sightHeight - that.props.multiStyle.space * 2 - 2 - 12) / 2)
         });
 
-        var lineNum = parseInt(idArr.length / maxLineItem);
+        let lineNum = parseInt(idArr.length / maxLineItem);
         $input.css('padding-left', deletePx($input.css('padding-left')) + that.props.multiStyle.width + that.props.multiStyle.space);
         if (idArr.length % maxLineItem === 0) {
             $input.css('padding-left', styles.paddingLeft);
@@ -824,7 +821,7 @@ MagicSearch.prototype = {
             $magicsearch_box.css('top', styles.height + lineNum * styles.sightHeight);
         } else {
             if (lineNum === 0) {
-                var minWidth = (idArr.length % maxLineItem + 1) * (that.props.multiStyle.width + that.props.multiStyle.space) + that.props.multiStyle.space * 2 + styles.borderLeftWidth + styles.borderRightWidth + (options.dropdownBtn ? DROPDOWN_WIDTH : 0);
+                let minWidth = (idArr.length % maxLineItem + 1) * (that.props.multiStyle.width + that.props.multiStyle.space) + that.props.multiStyle.space * 2 + styles.borderLeftWidth + styles.borderRightWidth + (options.dropdownBtn ? DROPDOWN_WIDTH : 0);
                 $input.css('min-width', minWidth);
                 $magicsearch_wrapper.css('min-width', minWidth);
             }
@@ -832,19 +829,19 @@ MagicSearch.prototype = {
 
         //bind click event on delete button
         $item.find('.' + doms.close).click(function() {
-            that.deleteData($(this).attr('data-id'));
+            that.deleteData($(this).attr('data-id')).hideSearchBox();
         });
         $magicsearch_wrapper.find('.' + doms.items).append($item);
     }
 };
 
 $.fn.magicsearch = function(options) {
-    var hasDropdownBtn = false;
-    var searchTimeout = null;
-    var preInput = '';
-    var jqo = this.each(function() {
-        var $this = $(this);
-        var magicSearch = $.data(this, 'magicsearch');
+    let hasDropdownBtn = false;
+    let searchTimeout = null;
+    let preInput = '';
+    let jqo = this.each(function() {
+        let $this = $(this);
+        let magicSearch = $.data(this, 'magicsearch');
         if (magicSearch) {
             magicSearch.destroy();
         }
@@ -853,10 +850,10 @@ $.fn.magicsearch = function(options) {
             return;
         }
         $.data(this, 'magicsearch', magicSearch);
-        var selfOptions = magicSearch.options;
-        var $magicsearch_wrapper = $this.parent(),
+        let selfOptions = magicSearch.options;
+        let $magicsearch_wrapper = $this.parent(),
             $magicsearch_box = $magicsearch_wrapper.find('.' + doms.box);
-        var dropdown = function() {
+        let dropdown = () => {
             if ($magicsearch_wrapper.hasClass('disabled')) {
                 return false;
             }
@@ -868,7 +865,7 @@ $.fn.magicsearch = function(options) {
                 });
                 $magicsearch_box.unbind('scroll');
                 $this.data('page', 1);
-                magicSearch.searchData(true).showSearchBox(function() {
+                magicSearch.searchData(true).showSearchBox(() => {
                     $magicsearch_box.on('scroll', function(e) {
                         if ((this.scrollHeight - $(this).scrollTop()) < 300) {
                             magicSearch.searchData(true, true);
@@ -878,13 +875,13 @@ $.fn.magicsearch = function(options) {
             }
         };
         $this.off().on('keyup', function(e) {
-            var $_this = $(this);
+            let $_this = $(this);
             if (e.which == KEY.ESC) {
                 $_this.val('').focus();
                 magicSearch.hideSearchBox();
             } else if (e.which == KEY.DOWN) {
-                var $li = $magicsearch_box.find('li');
-                var $ishover = $magicsearch_box.find('li.ishover');
+                let $li = $magicsearch_box.find('li');
+                let $ishover = $magicsearch_box.find('li.ishover');
                 if ($li.length > 0) {
                     if ($ishover.length > 0) {
                         $ishover.toggleClass('ishover');
@@ -899,8 +896,8 @@ $.fn.magicsearch = function(options) {
                 }
                 return false;
             } else if (e.which == KEY.UP) {
-                var $li = $magicsearch_box.find('li');
-                var $ishover = $magicsearch_box.find('li.ishover');
+                let $li = $magicsearch_box.find('li');
+                let $ishover = $magicsearch_box.find('li.ishover');
                 if ($li.length > 0) {
                     if ($ishover.length > 0) {
                         $ishover.toggleClass('ishover');
@@ -915,14 +912,14 @@ $.fn.magicsearch = function(options) {
                 }
                 return false;
             } else if (e.which == KEY.ENTER) {
-                var $ishover = $magicsearch_box.find('li.ishover');
+                let $ishover = $magicsearch_box.find('li.ishover');
                 if ($ishover.length > 0) {
                     $ishover.trigger('click');
                 }
             } else if (e.which == KEY.LEFT || e.which == KEY.RIGHT) {
                 return true;
             } else {
-                var currentInput = $_this.val();
+                let currentInput = $_this.val();
                 if ($.trim(preInput) == $.trim(currentInput)) {
                     return true;
                 }
@@ -937,7 +934,7 @@ $.fn.magicsearch = function(options) {
                         return;
                     }
                     clearTimeout(searchTimeout);
-                    searchTimeout = setTimeout(function() {
+                    searchTimeout = setTimeout(() => {
                         magicSearch.searchData().showSearchBox();
                     }, SEARCH_DELAY);
                 } else {
@@ -946,7 +943,7 @@ $.fn.magicsearch = function(options) {
             }
         })
         .on('keydown', function(e) {
-            var $_this = $(this);
+            let $_this = $(this);
             if (e.which == KEY.ESC) {
             } else if (e.which == KEY.UP) {
                 return false;
@@ -957,7 +954,7 @@ $.fn.magicsearch = function(options) {
             } else if (e.which == KEY.BACKSPACE) {
                 preInput = $_this.val();
                 if (selfOptions.multiple) {
-                    var $last_multi_item = $magicsearch_wrapper.find('.' + doms.items + ' .' + doms.item + ':last');
+                    let $last_multi_item = $magicsearch_wrapper.find('.' + doms.items + ' .' + doms.item + ':last');
                     if (selfOptions.showMultiSkin && $_this.val() === '') {
                         magicSearch.deleteData($last_multi_item.attr('data-id')).hideSearchBox();
                     }
@@ -993,9 +990,7 @@ $.fn.magicsearch = function(options) {
             magicSearch.hideSearchBox();
         });
 
-        $magicsearch_box.off().on('mousedown', 'ul', function() {
-            return false;
-        })
+        $magicsearch_box.off().on('mousedown', 'ul', () => false)
         .on('mouseenter', 'li', function() {
             $(this).parent().find('li.ishover').removeClass('ishover');
             $(this).addClass('ishover');
@@ -1004,7 +999,7 @@ $.fn.magicsearch = function(options) {
             $(this).removeClass('ishover');
         })
         .on('click', 'li', function() {
-            var $li = $(this);
+            let $li = $(this);
             if ($li.hasClass('selected') && selfOptions.multiple) {
                 magicSearch.deleteData($li.attr('data-id')).hideSearchBox();
             } else {
@@ -1015,9 +1010,7 @@ $.fn.magicsearch = function(options) {
         //When the option of dropdownBtn is true,bind the related event
         if (selfOptions.dropdownBtn) {
             hasDropdownBtn = true;
-            $magicsearch_wrapper.on('click', '.' + doms.arrow, function() {
-                dropdown();
-            });
+            $magicsearch_wrapper.on('click', '.' + doms.arrow, () => dropdown());
         }
         $this.on('clear', function() {
             $this.val('');
@@ -1040,7 +1033,7 @@ $.fn.magicsearch = function(options) {
         .on('update', function(e, options) {
             //update dataSource
             if (options.dataSource !== undefined) {
-                var tmpDataSource = options.dataSource;
+                let tmpDataSource = options.dataSource;
                 if (isString(tmpDataSource)) {
                     if (options.dataSource.toLowerCase() == 'null') {
                         tmpDataSource = [];
@@ -1048,8 +1041,8 @@ $.fn.magicsearch = function(options) {
                         try {
                             tmpDataSource = $.parseJSON(options.dataSource);
                             if (! $.isArray(tmpDataSource)) {
-                                var dataSource = [];
-                                for (var id in tmpDataSource) {
+                                let dataSource = [];
+                                for (let id in tmpDataSource) {
                                     dataSource.push(tmpDataSource[id]);
                                 }
                                 tmpDataSource = dataSource;
@@ -1079,11 +1072,11 @@ $.fn.magicsearch = function(options) {
 
     if (hasDropdownBtn && ! window.MagicSearch.hasBindBody) {
         $('body').on('mousedown', function(e) {
-            var $target = $(e.target),
-                $magicsearch_wrapper = $(this).find('.' + doms.wrapper + ' .' + doms.box + ':visible').first().parent(),
+            let $target = $(e.target),
+                $magicsearch_wrapper = $(this).find(`.${doms.wrapper} .${doms.box}:visible`).first().parent(),
                 $input = $magicsearch_wrapper.find('input:text');
-            var index = $magicsearch_wrapper.attr('data-index');
-            if (index !== undefined && ! $target.is('.' + doms.wrapper + '[data-index="' + index + '"] *')) {
+            let index = $magicsearch_wrapper.attr('data-index');
+            if (index !== undefined && ! $target.is(`.${doms.wrapper}[data-index="${index}"] *`)) {
                 $.data($input.get(0), 'magicsearch').hideSearchBox();
             }
         });
@@ -1093,7 +1086,7 @@ $.fn.magicsearch = function(options) {
 };
 
 window.MagicSearch = {
-    v: '1.0.0',
+    v: '1.0.2',
     index: 0,
     hasBindBody: false
 };

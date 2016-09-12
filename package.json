@@ -1,6 +1,6 @@
 {
   "name": "magicsearch",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "An input plugin based on jquery.",
   "main": "gulpfile.js",
   "scripts": {
@@ -24,8 +24,10 @@
   },
   "homepage": "http://www.choujindeputao.com/magicsearch/",
   "devDependencies": {
+    "babel-preset-es2015": "^6.14.0",
     "gulp": "^3.9.1",
     "gulp-autoprefixer": "^3.1.1",
+    "gulp-babel": "^6.1.2",
     "gulp-clean": "^0.3.2",
     "gulp-cssnano": "^2.1.2",
     "gulp-if": "^2.0.1",

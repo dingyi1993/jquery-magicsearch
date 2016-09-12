@@ -7,23 +7,25 @@ var rename = require('gulp-rename');
 var clean = require('gulp-clean');
 var uglify = require('gulp-uglify');
 var sequence = require('gulp-sequence');
+var babel = require('gulp-babel');
 
 gulp.task('css', function() {
     return gulp.src('src/sass/*.scss')
         .pipe(sass())
         .pipe(autoprefixer({browsers: ['>1%', 'last 5 versions']}))
-        .pipe(gulp.dest('dist'))
+        .pipe(gulp.dest('dist/css'))
         .pipe(cssnano())
         .pipe(rename({suffix: '.min'}))
-        .pipe(gulp.dest('dist'));
+        .pipe(gulp.dest('dist/css'));
 });
 
 gulp.task('js', function () {
     return gulp.src('src/js/*.js')
-        .pipe(gulp.dest('dist'))
+        .pipe(babel())
+        .pipe(gulp.dest('dist/js'))
         .pipe(uglify())
         .pipe(rename({suffix: '.min'}))
-        .pipe(gulp.dest('dist'));
+        .pipe(gulp.dest('dist/js'));
 });
 
 gulp.task('clean', function() {

@@ -6,10 +6,11 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link href="css/normalize.css" rel="stylesheet">
         <link href="css/style.css" rel="stylesheet">
-        <link href="../dist/jquery.magicsearch.css" rel="stylesheet">
+        <link href="../dist/css/jquery.magicsearch.css" rel="stylesheet">
     </head>
     <body class="theme2">
         <div id="container">
+            <div class="adjust"></div>
             <h1>MagicSearch</h1>
             <nav>
                 <a href="basic.html">Basic</a>
@@ -23,7 +24,7 @@
             </section>
         </div>
     <script src="lib/jquery-2.2.3.min.js"></script>
-    <script src="../dist/jquery.magicsearch.js"></script>
+    <script src="../dist/js/jquery.magicsearch.js"></script>
     <script>
         $(function() {
             var dataSource = [
@@ -44,7 +45,6 @@
                 id: 'id',
                 format: '%firstName% · %lastName%',
                 multiple: true,
-                focusShow: true,
                 multiField: 'firstName',
                 multiStyle: {
                     space: 5,
