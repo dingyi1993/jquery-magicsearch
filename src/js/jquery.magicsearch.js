@@ -1,16 +1,16 @@
 /*!
  * MagicSearch - An input plugin based on jquery
- * 
+ *
  * Copyright (c) 2016 dingyi1993
- * 
+ *
  * Version: 1.0.2
- * 
+ *
  * Licensed under the MIT license:
  *   http://www.opensource.org/licenses/MIT
- * 
+ *
  * project link:
  *   https://github.com/dingyi1993/jquery-magicsearch
- * 
+ *
  * home page link:
  *   http://www.choujindeputao.com/magicsearch/
  */
@@ -203,9 +203,11 @@ MagicSearch.prototype = {
             $input.wrap($wrapper);
         }
         let $magicsearch_wrapper = $input.parent();
+        let inputDisplay = $input.css('display');
         //init magicsearch wrapper
         $magicsearch_wrapper.css({
-            'display': $input.css('display'),
+            // if input's display is inline,regard as inline-block
+            'display': inputDisplay === 'inline' ? 'inline-block' : inputDisplay,
             'float': $input.css('float'),
             'margin': $input.css('margin')
         });

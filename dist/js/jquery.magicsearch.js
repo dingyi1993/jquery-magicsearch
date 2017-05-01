@@ -4,17 +4,17 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 
 /*!
  * MagicSearch - An input plugin based on jquery
- * 
+ *
  * Copyright (c) 2016 dingyi1993
- * 
+ *
  * Version: 1.0.2
- * 
+ *
  * Licensed under the MIT license:
  *   http://www.opensource.org/licenses/MIT
- * 
+ *
  * project link:
  *   https://github.com/dingyi1993/jquery-magicsearch
- * 
+ *
  * home page link:
  *   http://www.choujindeputao.com/magicsearch/
  */
@@ -226,9 +226,11 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
                 $input.wrap($wrapper);
             }
             var $magicsearch_wrapper = $input.parent();
+            var inputDisplay = $input.css('display');
             //init magicsearch wrapper
             $magicsearch_wrapper.css({
-                'display': $input.css('display'),
+                // if input's display is inline,regard as inline-block
+                'display': inputDisplay === 'inline' ? 'inline-block' : inputDisplay,
                 'float': $input.css('float'),
                 'margin': $input.css('margin')
             });
@@ -286,35 +288,33 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
             }
 
             if (this.options.type == 'ajax') {
-                (function () {
-                    var $loading = $('<div class="' + doms.loading + '"><div></div></div>');
-                    $magicsearch_wrapper.append($loading);
+                var $loading = $('<div class="' + doms.loading + '"><div></div></div>');
+                $magicsearch_wrapper.append($loading);
 
-                    var loadingTimeout = setTimeout(function () {
-                        $magicsearch_wrapper.find('.' + doms.loading).find('div').show();
-                    }, 500);
+                var loadingTimeout = setTimeout(function () {
+                    $magicsearch_wrapper.find('.' + doms.loading).find('div').show();
+                }, 500);
 
-                    var ajaxOptions = {
-                        type: 'GET',
-                        url: _this.options.dataSource,
-                        dataType: 'json',
-                        error: function error() {
-                            console.error('magicsearch: Error with xhr.Index: ' + window.MagicSearch.index);
-                        },
-                        success: function success(data) {}
-                    };
-                    ajaxOptions = $.extend({}, ajaxOptions, _this.options.ajaxOptions);
-                    var success = ajaxOptions.success;
-                    ajaxOptions.success = function (data) {
-                        clearTimeout(loadingTimeout);
-                        _this.options.dataSource = data;
-                        $magicsearch_wrapper.find('.' + doms.loading).remove();
-                        _this.initAfterAjax();
-                        success(data);
-                    };
+                var ajaxOptions = {
+                    type: 'GET',
+                    url: this.options.dataSource,
+                    dataType: 'json',
+                    error: function error() {
+                        console.error('magicsearch: Error with xhr.Index: ' + window.MagicSearch.index);
+                    },
+                    success: function success(data) {}
+                };
+                ajaxOptions = $.extend({}, ajaxOptions, this.options.ajaxOptions);
+                var success = ajaxOptions.success;
+                ajaxOptions.success = function (data) {
+                    clearTimeout(loadingTimeout);
+                    _this.options.dataSource = data;
+                    $magicsearch_wrapper.find('.' + doms.loading).remove();
+                    _this.initAfterAjax();
+                    success(data);
+                };
 
-                    $.ajax(ajaxOptions);
-                })();
+                $.ajax(ajaxOptions);
             } else {
                 this.initAfterAjax();
             }
@@ -674,92 +674,90 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
                 var noResult = options.noResult ? options.noResult : '&#x672a;&#x641c;&#x7d22;&#x5230;&#x7ed3;&#x679c;';
                 htmlStr = '<span class="no-result">' + noResult + '</span>';
             } else {
-                (function () {
-                    //delete empty input
-                    var inputVals = [].concat(_toConsumableArray(new Set(inputVal.split(' ')))).filter(function (item) {
-                        return item !== '';
-                    });
-                    var tempArr = [];
-                    for (var _i5 = 0; _i5 < inputVals.length - 1; _i5++) {
-                        for (var _j = _i5 + 1; _j < inputVals.length; _j++) {
-                            tempArr.push(inputVals[_i5] + ' ' + inputVals[_j]);
-                        }
+                //delete empty input
+                var _inputVals = [].concat(_toConsumableArray(new Set(inputVal.split(' ')))).filter(function (item) {
+                    return item !== '';
+                });
+                var tempArr = [];
+                for (var _i5 = 0; _i5 < _inputVals.length - 1; _i5++) {
+                    for (var _j = _i5 + 1; _j < _inputVals.length; _j++) {
+                        tempArr.push(_inputVals[_i5] + ' ' + _inputVals[_j]);
                     }
-                    inputVals = inputVals.concat(tempArr);
-                    //locate highlight chars
-                    var dataHighlight = void 0;
-                    if (!isAll) {
-                        dataHighlight = $.extend(true, [], data);
-                        data.forEach(function (item, index) {
-                            options.fields.forEach(function (field) {
-                                var posArr = [];
-                                if (item[field] !== null) {
-                                    for (var _i6 = 0; _i6 < item[field].length; _i6++) {
-                                        posArr[_i6] = 0;
-                                    }
-                                    inputVals.forEach(function (value) {
-                                        var position = item[field].toLowerCase().indexOf(value.toLowerCase());
-                                        if (position > -1) {
-                                            for (var _i7 = position; _i7 < value.length + position; _i7++) {
-                                                posArr[_i7] = 1;
-                                            }
-                                        }
-                                    });
+                }
+                _inputVals = _inputVals.concat(tempArr);
+                //locate highlight chars
+                var dataHighlight = void 0;
+                if (!isAll) {
+                    dataHighlight = $.extend(true, [], data);
+                    data.forEach(function (item, index) {
+                        options.fields.forEach(function (field) {
+                            var posArr = [];
+                            if (item[field] !== null) {
+                                for (var _i6 = 0; _i6 < item[field].length; _i6++) {
+                                    posArr[_i6] = 0;
                                 }
-                                var tmpPosArr = [];
-                                var hasStarted = false,
-                                    start = -1,
-                                    length = 0;
-                                for (var _i8 = posArr.length - 1; _i8 >= 0; _i8--) {
-                                    if (posArr[_i8] == 1) {
-                                        if (!hasStarted) {
-                                            hasStarted = true;
-                                            start = _i8;
-                                        } else {
-                                            start--;
+                                _inputVals.forEach(function (value) {
+                                    var position = item[field].toLowerCase().indexOf(value.toLowerCase());
+                                    if (position > -1) {
+                                        for (var _i7 = position; _i7 < value.length + position; _i7++) {
+                                            posArr[_i7] = 1;
                                         }
-                                        length++;
-                                        if (_i8 === 0) {
-                                            tmpPosArr.push({ start: start, length: length });
-                                        }
+                                    }
+                                });
+                            }
+                            var tmpPosArr = [];
+                            var hasStarted = false,
+                                start = -1,
+                                length = 0;
+                            for (var _i8 = posArr.length - 1; _i8 >= 0; _i8--) {
+                                if (posArr[_i8] == 1) {
+                                    if (!hasStarted) {
+                                        hasStarted = true;
+                                        start = _i8;
                                     } else {
-                                        if (hasStarted) {
-                                            hasStarted = false;
-                                            tmpPosArr.push({ start: start, length: length });
-                                            length = 0;
-                                        }
+                                        start--;
+                                    }
+                                    length++;
+                                    if (_i8 === 0) {
+                                        tmpPosArr.push({ start: start, length: length });
+                                    }
+                                } else {
+                                    if (hasStarted) {
+                                        hasStarted = false;
+                                        tmpPosArr.push({ start: start, length: length });
+                                        length = 0;
                                     }
                                 }
-                                if (dataHighlight[index][field] !== undefined) {
-                                    dataHighlight[index][field] = tmpPosArr;
-                                }
-                            });
+                            }
+                            if (dataHighlight[index][field] !== undefined) {
+                                dataHighlight[index][field] = tmpPosArr;
+                            }
+                        });
+                    });
+                }
+
+                htmlStr += '<ul>';
+                data.forEach(function (item, index) {
+                    var tmpItem = $.extend({}, item);
+                    htmlStr += '<li class="';
+                    htmlStr += options.disableRule(item) ? 'disabled' : 'enabled';
+                    if (options.showSelected) {
+                        htmlStr += idArr.includes(item[options.id]) ? ' selected' : '';
+                    }
+                    htmlStr += '" data-id="' + (item[options.id] === undefined ? '' : item[options.id]) + '"';
+                    if (!isAll) {
+                        options.fields.forEach(function (field) {
+                            if (item[field] !== null) {
+                                dataHighlight[index][field].forEach(function (value) {
+                                    var matchStr = tmpItem[field].substr(value.start, value.length);
+                                    tmpItem[field] = tmpItem[field].replace(new RegExp(matchStr, 'i'), '<span class="keyword">' + matchStr + '</span>');
+                                });
+                            }
                         });
                     }
-
-                    htmlStr += '<ul>';
-                    data.forEach(function (item, index) {
-                        var tmpItem = $.extend({}, item);
-                        htmlStr += '<li class="';
-                        htmlStr += options.disableRule(item) ? 'disabled' : 'enabled';
-                        if (options.showSelected) {
-                            htmlStr += idArr.includes(item[options.id]) ? ' selected' : '';
-                        }
-                        htmlStr += '" data-id="' + (item[options.id] === undefined ? '' : item[options.id]) + '"';
-                        if (!isAll) {
-                            options.fields.forEach(function (field) {
-                                if (item[field] !== null) {
-                                    dataHighlight[index][field].forEach(function (value) {
-                                        var matchStr = tmpItem[field].substr(value.start, value.length);
-                                        tmpItem[field] = tmpItem[field].replace(new RegExp(matchStr, 'i'), '<span class="keyword">' + matchStr + '</span>');
-                                    });
-                                }
-                            });
-                        }
-                        htmlStr += ' title="' + formatParse(options.format, item) + '">' + formatParse(options.format, tmpItem) + '</li>';
-                    });
-                    htmlStr += '</ul>';
-                })();
+                    htmlStr += ' title="' + formatParse(options.format, item) + '">' + formatParse(options.format, tmpItem) + '</li>';
+                });
+                htmlStr += '</ul>';
             }
 
             //create dom
