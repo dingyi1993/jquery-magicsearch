@@ -10,12 +10,16 @@ view on my home page,[click here](http://www.choujindeputao.com/magicsearch/)
 
 ## Changes Log
 
-### v1.0.1 2016-09-06
+### v1.0.3 2017-05-01
 
-1. fix class name 'hover' to 'focus'
+1. Fix issue [#1](https://github.com/dingyi1993/jquery-magicsearch/issues/1)
 
 ### v1.0.2 2016-09-12
 
 1. change src to es6
 2. hide search box when click close btn
 3. update examples
+
+### v1.0.1 2016-09-06
+
+1. fix class name 'hover' to 'focus'
