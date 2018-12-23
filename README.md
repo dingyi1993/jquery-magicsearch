@@ -6,7 +6,9 @@ an input plugin based on jquery
 [![NPM version](https://img.shields.io/npm/v/magicsearch.svg)](https://www.npmjs.com/package/magicsearch)
 [![Downloads](https://img.shields.io/npm/dt/magicsearch.svg)](https://www.npmjs.com/package/magicsearch)
 
-view on my home page,[click here](http://www.choujindeputao.com/magicsearch/)
+sorry about the doc,my website is rebuiding,coming soon.
+
+~~view on my home page,[click here](http://www.choujindeputao.com/magicsearch/)~~
 
 ## Changes Log
 
