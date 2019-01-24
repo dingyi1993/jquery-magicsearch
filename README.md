@@ -1,4 +1,5 @@
-jquery-magicsearch
+# jquery-magicsearch
+
 ====
 an input plugin based on jquery
 
@@ -9,6 +10,10 @@ an input plugin based on jquery
 view on my home page,[click here](https://www.dingyi1993.com/blog/magicsearch)
 
 ## Changes Log
+
+### v1.0.4 2019-01-24
+
+1. Feature: Able to set selected item programmatically [#6](https://github.com/dingyi1993/jquery-magicsearch/issues/6)
 
 ### v1.0.3 2017-05-01
 

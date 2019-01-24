@@ -17,10 +17,11 @@
                 <a class="active" href="multiple.html">Multiple</a>
                 <a href="dropdownBtn.html">DropdownBtn</a>
                 <a href="focusShow.html">FocusShow</a>
-                <a href="http://www.choujindeputao.com/magicsearch/">More</a>
+                <a href="https://www.dingyi1993.com/blog/magicsearch">More</a>
             </nav>
             <section>
                 <input class="magicsearch" id="basic" placeholder="search names...">
+                <button id="set-btn" type="button">set a value</button>
             </section>
         </div>
     <script src="lib/jquery-2.2.3.min.js"></script>
@@ -50,6 +51,9 @@
                     space: 5,
                     width: 80
                 }
+            });
+            $('#set-btn').click(function() {
+                $('#basic').trigger('set', { id: '3,4' });
             });
         });
     </script>

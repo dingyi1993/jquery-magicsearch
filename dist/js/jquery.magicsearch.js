@@ -16,7 +16,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
  *   https://github.com/dingyi1993/jquery-magicsearch
  *
  * home page link:
- *   http://www.choujindeputao.com/magicsearch/
+ *   https://www.dingyi1993.com/blog/magicsearch
  */
 
 ;(function (factory) {
@@ -848,9 +848,8 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
             });
 
             var lineNum = parseInt(idArr.length / maxLineItem);
-            $input.css('padding-left', deletePx($input.css('padding-left')) + that.props.multiStyle.width + that.props.multiStyle.space);
+            $input.css('padding-left', styles.paddingLeft + idArr.length % maxLineItem * (that.props.multiStyle.width + that.props.multiStyle.space));
             if (idArr.length % maxLineItem === 0) {
-                $input.css('padding-left', styles.paddingLeft);
                 $input.css('height', styles.height + lineNum * styles.sightHeight);
                 $input.css('padding-top', lineNum * styles.sightHeight);
                 $magicsearch_box.css('top', styles.height + lineNum * styles.sightHeight);
@@ -1087,6 +1086,12 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
                     magicSearch.props.isFirstGetDataSource = true;
                     magicSearch.options.dataSource = tmpDataSource;
                 }
+            }).on('set', function (e, options) {
+                var originId = magicSearch.$element.attr('data-id');
+                var multi = magicSearch.options.multiple;
+                magicSearch.destroy();
+                magicSearch.$element.attr('data-id', options.override || !multi ? options.id : [].concat(_toConsumableArray(new Set((originId ? originId.split(',') : []).concat(options.id.split(','))))));
+                magicSearch.$element.magicsearch(magicSearch.options);
             }).on('destroy', function () {
                 magicSearch.destroy();
             });
