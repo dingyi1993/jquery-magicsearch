@@ -1,5 +1,7 @@
 'use strict';
 
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
 function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
 
 /*!
@@ -136,6 +138,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
         dataSource: [], //array or string or function
         type: '', //string
         ajaxOptions: {}, //object
+        defaultValue: undefined, //array or object
         id: '', //string
         hidden: false, //boolean
         fields: '', //string or array
@@ -287,6 +290,18 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
                 $magicsearch_wrapper.append($arrow);
             }
 
+            //init magicsearch default values
+            var defaultValue = this.options.defaultValue,
+                id = this.options.id;
+            if ($.isArray(defaultValue)) {
+                ids = defaultValue.map(function (value) {
+                    return value[id];
+                }).join(',');
+            } else if ((typeof defaultValue === 'undefined' ? 'undefined' : _typeof(defaultValue)) === 'object') {
+                ids = defaultValue[id];
+            }
+            $input.attr('data-id', ids);
+
             if (this.options.type == 'ajax') {
                 var $loading = $('<div class="' + doms.loading + '"><div></div></div>');
                 $magicsearch_wrapper.append($loading);
@@ -338,8 +353,8 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
                         this.options.dataSource = $.parseJSON(this.options.dataSource);
                         if (!$.isArray(this.options.dataSource)) {
                             var dataSource = [];
-                            for (var id in this.options.dataSource) {
-                                dataSource.push(this.options.dataSource[id]);
+                            for (var _id in this.options.dataSource) {
+                                dataSource.push(this.options.dataSource[_id]);
                             }
                             this.options.dataSource = dataSource;
                         }
@@ -351,11 +366,54 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
                 }
             } else if (!$.isArray(this.options.dataSource)) {
                 var _dataSource = [];
-                for (var _id in this.options.dataSource) {
-                    _dataSource.push(this.options.dataSource[_id]);
+                for (var _id2 in this.options.dataSource) {
+                    _dataSource.push(this.options.dataSource[_id2]);
                 }
                 this.options.dataSource = _dataSource;
             }
+
+            var defaultValue = this.options.defaultValue,
+                data = this.options.dataSource,
+                id = this.options.id;
+
+            // Appending default values
+            if ($.isArray(defaultValue)) {
+                data = data.concat(defaultValue);
+            } else if ((typeof defaultValue === 'undefined' ? 'undefined' : _typeof(defaultValue)) === 'object') {
+                data = data.concat([defaultValue]);
+            }
+
+            // Removing duplicated options
+            if (id) {
+                var dataObj = {};
+                var _iteratorNormalCompletion = true;
+                var _didIteratorError = false;
+                var _iteratorError = undefined;
+
+                try {
+                    for (var _iterator = data[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+                        var opt = _step.value;
+
+                        dataObj[opt[id]] = opt;
+                    }
+                } catch (err) {
+                    _didIteratorError = true;
+                    _iteratorError = err;
+                } finally {
+                    try {
+                        if (!_iteratorNormalCompletion && _iterator.return) {
+                            _iterator.return();
+                        }
+                    } finally {
+                        if (_didIteratorError) {
+                            throw _iteratorError;
+                        }
+                    }
+                }
+
+                this.options.dataSource = Object.values(dataObj);
+            }
+
             if (isString(this.options.fields)) {
                 this.options.fields = [this.options.fields === '' ? this.options.id : this.options.fields];
             } else if (!$.isArray(this.options.fields)) {
@@ -432,9 +490,9 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
                 }
             } else {
                 if (ids !== '') {
-                    var data = this.props.objDataSource[ids];
+                    var _data = this.props.objDataSource[ids];
                     var format = this.options.inputFormat ? this.options.inputFormat : this.options.format;
-                    $input.val(formatParse(format, data));
+                    $input.val(formatParse(format, _data));
                 }
             }
         },

@@ -121,6 +121,7 @@ MagicSearch.defaults = {
     dataSource: [],         //array or string or function
     type: '',               //string
     ajaxOptions: {},        //object
+    defaultValue: undefined,  //array or object
     id: '',                 //string
     hidden: false,          //boolean
     fields: '',             //string or array
@@ -264,6 +265,16 @@ MagicSearch.prototype = {
             $magicsearch_wrapper.append($arrow);
         }
 
+        //init magicsearch default values
+        let defaultValue = this.options.defaultValue,
+            id = this.options.id;
+        if($.isArray(defaultValue)){
+            ids = defaultValue.map(value=>value[id]).join(',');
+        } else if(typeof defaultValue==='object') {
+            ids = defaultValue[id];
+        }
+        $input.attr('data-id',ids);
+
         if (this.options.type == 'ajax') {
             let $loading = $(`<div class="${doms.loading}"><div></div></div>`);
             $magicsearch_wrapper.append($loading);
@@ -333,6 +344,27 @@ MagicSearch.prototype = {
             }
             this.options.dataSource = dataSource;
         }
+
+        let defaultValue = this.options.defaultValue,
+            data = this.options.dataSource,
+            id = this.options.id;
+
+        // Appending default values
+        if($.isArray(defaultValue)){
+            data = data.concat(defaultValue);
+        } else if(typeof defaultValue==='object') {
+            data = data.concat([defaultValue]);
+        }
+
+        // Removing duplicated options
+        if(id){
+            let dataObj = {};
+            for(let opt of data){
+                dataObj[opt[id]] = opt;
+            }
+            this.options.dataSource = Object.values(dataObj);
+        }
+
         if (isString(this.options.fields)) {
             this.options.fields = [this.options.fields === '' ? this.options.id : this.options.fields];
         } else if (! $.isArray(this.options.fields)) {
